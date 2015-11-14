@@ -1,3 +1,5 @@
+package language.memory;
+
 import java.util.Map;
 
 public interface Collector {
