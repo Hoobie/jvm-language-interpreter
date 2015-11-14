@@ -1,0 +1,1 @@
+java -cp ".;../lib/*" org.antlr.v4.Tool %* -o ../src/
