@@ -24,8 +24,8 @@ public class NPJSemiSpaceCopyingMemory implements Collector, Allocator {
         int size = VariableType.T.getBaseSize();
         int ptr = allocate(heap, objects, size);
         heap[ptr] = VariableType.T.getCode();
-        heap[ptr + 1] = Constants.NULL;
-        heap[ptr + 2] = Constants.NULL;
+        heap[ptr + 1] = Constants.NULLPTR;
+        heap[ptr + 2] = Constants.NULLPTR;
         heap[ptr + 3] = 0;
         return ptr;
     }
@@ -72,11 +72,12 @@ public class NPJSemiSpaceCopyingMemory implements Collector, Allocator {
         if (heap[root] < 0) {
             int newPtr = allocPtr;
             int variableSize = getSize(heap, root);
-            System.arraycopy(heap, root, heap, newPtr, variableSize);
             allocPtr += variableSize;
+            System.arraycopy(heap, root, heap, newPtr, variableSize);
+            heap[root] = newPtr;
             if (VariableType.getType(heap[newPtr]) == VariableType.T) {
-                int f1 = heap[newPtr + 1];
-                int f2 = heap[newPtr + 2];
+                int f1 = heap[root + 1];
+                int f2 = heap[root + 2];
                 heap[newPtr + 1] = copy(heap, f1);
                 heap[newPtr + 2] = copy(heap, f2);
             }

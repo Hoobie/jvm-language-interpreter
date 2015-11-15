@@ -2,6 +2,7 @@ package language;
 
 import language.memory.Collector;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Map;
 
@@ -14,10 +15,10 @@ public class NPJ {
         collector.collect(heap, params);
     }
 
-    /*
-      typeTVariables - kolekcja wartosci pola "data" wszystkich zywych obiektow typu T
-      typeSVariables - kolekcja wartosci wszystkich zywych obiektow typu S
-    */
+    public static void heapAnalyze(int heap[]) {
+        print(Arrays.toString(heap));
+    }
+
     public static void heapAnalyze(Collection<Integer> typeTVariables, Collection<String> typeSVariables) {
     }
 }
