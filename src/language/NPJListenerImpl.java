@@ -93,13 +93,11 @@ public class NPJListenerImpl extends NPJBaseListener {
             if (type == VariableType.T) {
                 ptr += 3;
                 variablesT.add(heap[ptr]);
-                ptr++;
             } else if (type == VariableType.S) {
                 variablesS.add(buildString(ptr));
-                ptr += VariableType.S.getBaseSize() + heap[ptr + Constants.STRING_LENGTH_OFFSET];
-            } else {
-                break;
+                ptr += VariableType.S.getBaseSize() + heap[ptr + Constants.STRING_LENGTH_OFFSET] - 1;
             }
+            ptr++;
         }
         NPJ.heapAnalyze(variablesT, variablesS);
     }
