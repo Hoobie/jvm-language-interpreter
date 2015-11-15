@@ -87,12 +87,12 @@ public class NPJListenerImpl extends NPJBaseListener {
         Collection<Integer> variablesT = new ArrayList<>();
         Collection<String> variablesS = new ArrayList<>();
         int ptr = memory.toSpace;
-        while (ptr < memory.toSpace + (heap.length / 2)) {
+        while (ptr < memory.toSpace + (heap.length / 2) - 1) {
             int code = heap[ptr];
             VariableType type = code < 0 ? VariableType.getType(code) : null;
             if (type == VariableType.T) {
                 ptr += 3;
-                variablesT.add(code);
+                variablesT.add(heap[ptr]);
             } else if (type == VariableType.S) {
                 variablesS.add(buildString(ptr));
                 ptr += VariableType.S.getBaseSize() + heap[ptr + Constants.STRING_LENGTH_OFFSET];
