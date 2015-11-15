@@ -55,16 +55,7 @@ public class NPJListenerImpl extends NPJBaseListener {
         }
 
         Integer ptr = variableData.ptr;
-        if (heap[ptr] == Constants.NULLPTR) {
-            NPJ.print("NULL");
-            return;
-        }
-
-        String stringConstant = "";
-        for (int i = 0; i < heap[ptr + Constants.STRING_LENGTH_OFFSET]; i++) {
-            stringConstant += (char) heap[ptr + VariableType.S.getBaseSize() + i];
-        }
-        NPJ.print(stringConstant);
+        NPJ.print(buildString(ptr));
     }
 
     @Override
@@ -93,7 +84,22 @@ public class NPJListenerImpl extends NPJBaseListener {
 
     @Override
     public void exitHeapAnalyze(NPJParser.HeapAnalyzeContext ctx) {
-        NPJ.heapAnalyze(heap);
+        Collection<Integer> variablesT = new ArrayList<>();
+        Collection<String> variablesS = new ArrayList<>();
+        int ptr = memory.toSpace;
+        while (ptr < memory.toSpace + (heap.length / 2)) {
+            int code = heap[ptr];
+            VariableType type = code < 0 ? VariableType.getType(code) : null;
+            if (type == VariableType.T) {
+                ptr += 3;
+                variablesT.add(code);
+            } else if (type == VariableType.S) {
+                variablesS.add(buildString(ptr));
+                ptr += VariableType.S.getBaseSize() + heap[ptr + Constants.STRING_LENGTH_OFFSET];
+            }
+            ptr++;
+        }
+        NPJ.heapAnalyze(variablesT, variablesS);
     }
 
     private void declareString(String variableName, String variableValue) {
@@ -104,6 +110,18 @@ public class NPJListenerImpl extends NPJBaseListener {
         }
         VariableData variableData = new VariableData(ptr, VariableType.S);
         variables.put(variableName, variableData);
+    }
+
+    private String buildString(int ptr) {
+        if (heap[ptr] == Constants.NULLPTR) {
+            return Constants.NULL;
+        }
+
+        String stringConstant = "";
+        for (int i = 0; i < heap[ptr + Constants.STRING_LENGTH_OFFSET]; i++) {
+            stringConstant += (char) heap[ptr + VariableType.S.getBaseSize() + i];
+        }
+        return stringConstant;
     }
 
     private int resolvePtr(String value) {

@@ -20,5 +20,15 @@ public class NPJ {
     }
 
     public static void heapAnalyze(Collection<Integer> typeTVariables, Collection<String> typeSVariables) {
+        print("");
+        print("Type T variables:");
+        for (int var : typeTVariables) {
+            print(String.valueOf(var));
+        }
+        print("=================");
+        print("Type S variables:");
+        for (String var : typeSVariables) {
+            print(var);
+        }
     }
 }

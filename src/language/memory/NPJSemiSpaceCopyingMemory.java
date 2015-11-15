@@ -9,7 +9,7 @@ import java.util.Map;
 public class NPJSemiSpaceCopyingMemory implements Collector, Allocator {
 
     private int halfOfHeapSize;
-    private int toSpace = 1;
+    public int toSpace = 1;
     private int fromSpace;
     private int allocPtr;
 
@@ -59,6 +59,9 @@ public class NPJSemiSpaceCopyingMemory implements Collector, Allocator {
         Map<Integer, VariableData> variables = (Map) params;
         for (VariableData root : variables.values()) {
             root.ptr = copy(heap, root.ptr);
+        }
+        for (int i = fromSpace; i < fromSpace + halfOfHeapSize; i++) {
+            heap[i] = 0;
         }
     }
 
